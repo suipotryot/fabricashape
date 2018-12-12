@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf8'>
+        <title>Fabricshape Example 2D</title>
+    </head>
+    <body>
+        <script src="vendor/fabric.min.js"></script>
+        <script src="../fabricashape.js"></script>
+
+        <div class="canvasholder" style="width: 600px; height: 500px; position: relative; -moz-user-select: none;">
+            <canvas id="example2D" width="1200" height="1000" class="lower-canvas" style="position: absolute; width: 600px; height: 500px; left: 0px; top: 0px; touch-action: none; -moz-user-select: none;"></canvas>
+        </div>
+
+        <script type="text/javascript" charset="utf-8">
+(function() {
+    var canvas = new fabricashape.Canvas('example2D');
+})();
+
+        </script>
+    </body>
+</html>
