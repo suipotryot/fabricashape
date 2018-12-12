@@ -1,3 +1,4 @@
+
 let fabricashape = {}
 
 fabricashape.Canvas = class Canvas extends fabric.Canvas {
@@ -52,17 +53,15 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
             option.style.backgroundColor = choices[i].color
             selectList.appendChild(option)
         }
-        selectList.style.position = 'absolute';
-        selectList.style.left = '0px';
-        selectList.style.top = '0px';
-        selectList.style.width = '200px';
-        selectList.style.height = '17px';
+        for (var key in CONSTANTS.SELECT_LIST_STYLE) {
+            selectList.style[key] = CONSTANTS.SELECT_LIST_STYLE[key]
+        }
 
-        this.Paste(selectList)
+        this.createReferenceRect(selectList)
 
     }
 
-    Paste(selectList) {
+    createReferenceRect(selectList) {
         let red = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[0].style.backgroundColor})
         this.add(red)
         this.item(this.size() - 1).hasControls = false
@@ -73,15 +72,11 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
         }
 
         red.on('mousedown', (e) => {
-            this.Paste(selectList)
+            this.createReferenceRect(selectList)
             red.hasControls = true
-            // controls: 'tl', 'tr', 'br', 'bl', 'ml', 'mt', 'mr', 'mb', 'mtr'
-            red.setControlVisible('tl', false)
-            red.setControlVisible('tr', false)
-            red.setControlVisible('bl', false)
-            red.setControlVisible('br', false)
-            red.setControlVisible('mt', false)
-            red.setControlVisible('mb', false)
+            CONSTANTS.RECT_DISABLED_CONTROLS.forEach((control) => {
+                red.setControlVisible(control, false)
+            })
         })
 
         selectList.removeEventListener('change', fillReferenceRect)
