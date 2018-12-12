@@ -1,0 +1,34 @@
+{
+    "name": "fabricashape",
+    "version": "1.0.0",
+    "description": "A tool to draw lines and surfaces in canvas, using fabric.js",
+    "main": "fabricashape.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/suipotryot/fabricashape.git"
+    },
+    "keywords": [
+        "shape",
+        "drawing",
+        "2D"
+    ],
+    "author": "Guillaume Dubus <guillaume1.dubus@gmail.com>",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/suipotryot/fabricashape/issues"
+    },
+    "homepage": "https://github.com/suipotryot/fabricashape#readme",
+    "devDependencies": {
+        "eslint": "^5.10.0",
+        "eslint-config-google": "^0.11.0"
+    },
+    "env": {
+        "es6": true
+    }
+}
