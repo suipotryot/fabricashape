@@ -27,7 +27,7 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
             // console.log(JSON.stringify(e))
         });
 
-        this.setShapeChoices(domElemendId, [{label: 'toto in da place when you look at the sky and you think about the other people in the world', color: 'red'},{label: 'tata', color: 'rgba(255,0,0,0.5)'}])
+        this.setShapeChoices(domElemendId, [{label: 'toto in da place when you look at the sky and you think about the other people in the world', color: 'red'},{label: 'tata', color: 'rgb(200,100,0)'}])
     }
 
     /* 
@@ -57,30 +57,33 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
             selectList.style[key] = CONSTANTS.SELECT_LIST_STYLE[key]
         }
 
-        this.createReferenceRect(selectList)
-
+        this.createReferenceLine(selectList)
     }
 
-    createReferenceRect(selectList) {
-        let red = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[0].style.backgroundColor})
-        this.add(red)
+    createReferenceLine(selectList) {
+        let referenceLine = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[selectList.selectedIndex].style.backgroundColor})
+        this.add(referenceLine)
         this.item(this.size() - 1).hasControls = false
         this.requestRenderAll()
 
-        let fillReferenceRect = () => {
+        let fillReferenceLine = () => {
             this.item(this.size() - 1).set('fill', selectList.options[selectList.selectedIndex].style.backgroundColor)
         }
 
-        red.on('mousedown', (e) => {
-            this.createReferenceRect(selectList)
-            red.hasControls = true
+        let duplicateReferenceLine = () => {
+            this.createReferenceLine(selectList)
+            referenceLine.hasControls = true
             CONSTANTS.RECT_DISABLED_CONTROLS.forEach((control) => {
-                red.setControlVisible(control, false)
+                referenceLine.setControlVisible(control, false)
             })
+        }
+
+        referenceLine.on('mousedown', () => {
+            duplicateReferenceLine()
+            referenceLine.off('mousedown')
         })
 
-        selectList.removeEventListener('change', fillReferenceRect)
-        selectList.addEventListener('change', fillReferenceRect)
-
+        selectList.removeEventListener('change', fillReferenceLine)
+        selectList.addEventListener('change', fillReferenceLine)
     }
 }
