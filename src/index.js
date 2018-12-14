@@ -1,9 +1,7 @@
+import 'fabric'
+import {SELECT_LIST_STYLE, RECT_DISABLED_CONTROLS} from './constants'
 
-let fabricashape = {}
-
-fabricashape.Canvas = class Canvas extends fabric.Canvas {
-
-    // this.mousePosition = {pointer: {x: 0, y: 0}, absolutePointer: {x: 0, y: 0}};
+export class Canvas extends fabric.Canvas {
 
     constructor(domElemendId) {
         super(domElemendId)
@@ -24,7 +22,6 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
 
         this.on('mouse:move', function(e) {
             //mousePosition = {pointer: e.pointer, absolutePointer: e.absolutePointer};
-            // console.log(JSON.stringify(e))
         });
 
         this.setShapeChoices(domElemendId, [{label: 'toto in da place when you look at the sky and you think about the other people in the world', color: 'red'},{label: 'tata', color: 'rgb(200,100,0)'}])
@@ -53,8 +50,8 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
             option.style.backgroundColor = choices[i].color
             selectList.appendChild(option)
         }
-        for (var key in CONSTANTS.SELECT_LIST_STYLE) {
-            selectList.style[key] = CONSTANTS.SELECT_LIST_STYLE[key]
+        for (var key in SELECT_LIST_STYLE) {
+            selectList.style[key] = SELECT_LIST_STYLE[key]
         }
 
         this.createReferenceLine(selectList)
@@ -73,7 +70,7 @@ fabricashape.Canvas = class Canvas extends fabric.Canvas {
         let duplicateReferenceLine = () => {
             this.createReferenceLine(selectList)
             referenceLine.hasControls = true
-            CONSTANTS.RECT_DISABLED_CONTROLS.forEach((control) => {
+            RECT_DISABLED_CONTROLS.forEach((control) => {
                 referenceLine.setControlVisible(control, false)
             })
         }
