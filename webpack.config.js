@@ -1,6 +1,5 @@
-const path = require('path');
-
-module.exports = {
+var config = {
+    mode: 'production',
     entry: './src/index.js',
     output: {
         filename: 'main.js',
@@ -8,3 +7,5 @@ module.exports = {
         library: 'fabricashape'
     }
 };
+
+module.exports = config;
