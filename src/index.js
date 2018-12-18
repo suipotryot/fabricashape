@@ -1,4 +1,4 @@
-import 'fabric'
+import {fabric} from 'fabric'
 import {SELECT_LIST_STYLE, RECT_DISABLED_CONTROLS} from './constants'
 
 export class Canvas extends fabric.Canvas {

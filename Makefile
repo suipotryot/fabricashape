@@ -5,4 +5,4 @@ build:
 	npm run build
 
 test:
-	@NODE_ENV=test ./node_modules/mocha-webpack/bin/mocha-webpack test
+	./node_modules/.bin/webpack -w --config webpack-test.config.js
