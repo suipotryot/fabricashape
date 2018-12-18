@@ -5,26 +5,7 @@ export class Canvas extends fabric.Canvas {
 
     constructor(domElemendId) {
         super(domElemendId)
-
-        this.on('mouse:over', function(e) {
-            if (e.target) {
-                //e.target.set('fill', 'red')
-            }
-            this.renderAll()
-        });
-
-        this.on('mouse:out', function(e) {
-            if (e.target) {
-                //e.target.set('fill', 'rgba(255,0,0,0.5)')
-            }
-            this.renderAll()
-        });
-
-        this.on('mouse:move', function(e) {
-            //mousePosition = {pointer: e.pointer, absolutePointer: e.absolutePointer};
-        });
-
-        this.setShapeChoices(domElemendId, [{label: 'toto in da place when you look at the sky and you think about the other people in the world', color: 'red'},{label: 'tata', color: 'rgb(200,100,0)'}])
+        this.domElemendId = domElemendId
     }
 
     /* 
@@ -34,23 +15,23 @@ export class Canvas extends fabric.Canvas {
      *      {label: 'label2', color: 'rgba(255,0,0,0.5)'}
      *   ]
      */
-    setShapeChoices(domElemendId, choices) {
-        var canvasholder = document.getElementById(domElemendId)
+    setShapeChoices(choices) {
+        const canvasholder = document.getElementById(this.domElemendId)
 
         //Create and append select list
-        var selectList = document.createElement("select")
+        const selectList = document.createElement("select")
         selectList.id = "fabricashapeShapeChoices"
         canvasholder.parentElement.appendChild(selectList)
 
         //Create and append the options
-        for (var i = 0; i < choices.length; i++) {
-            var option = document.createElement("option")
+        for (let i = 0; i < choices.length; i++) {
+            const option = document.createElement("option")
             option.value = choices[i].label
             option.text = choices[i].label
             option.style.backgroundColor = choices[i].color
             selectList.appendChild(option)
         }
-        for (var key in SELECT_LIST_STYLE) {
+        for (let key in SELECT_LIST_STYLE) {
             selectList.style[key] = SELECT_LIST_STYLE[key]
         }
 
@@ -58,16 +39,17 @@ export class Canvas extends fabric.Canvas {
     }
 
     createReferenceLine(selectList) {
-        let referenceLine = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[selectList.selectedIndex].style.backgroundColor})
+        const referenceLine = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[selectList.selectedIndex].style.backgroundColor})
         this.add(referenceLine)
         this.item(this.size() - 1).hasControls = false
         this.requestRenderAll()
 
-        let fillReferenceLine = () => {
+        const fillReferenceLine = () => {
             this.item(this.size() - 1).set('fill', selectList.options[selectList.selectedIndex].style.backgroundColor)
+            this.renderAll()
         }
 
-        let duplicateReferenceLine = () => {
+        const duplicateReferenceLine = () => {
             this.createReferenceLine(selectList)
             referenceLine.hasControls = true
             RECT_DISABLED_CONTROLS.forEach((control) => {
