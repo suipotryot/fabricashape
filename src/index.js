@@ -14,8 +14,9 @@ export class Canvas extends fabric.Canvas {
      *      {label: 'label1', color: 'blue'},
      *      {label: 'label2', color: 'rgba(255,0,0,0.5)'}
      *   ]
+     * @return a DOM select object with corresponding options
      */
-    setShapeChoices(choices) {
+    listToSelectDOM(choices) {
         const canvasholder = document.getElementById(this.domElemendId)
 
         //Create and append select list
@@ -34,7 +35,11 @@ export class Canvas extends fabric.Canvas {
         for (let key in SELECT_LIST_STYLE) {
             selectList.style[key] = SELECT_LIST_STYLE[key]
         }
+        return selectList
+    }
 
+    setShapeChoices(choices) {
+        const selectList = this.listToSelectDOM(choices)
         this.createReferenceLine(selectList)
     }
 
