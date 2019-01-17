@@ -19,3 +19,6 @@ The project belongs on webpack to generate a unique and compact javascript file.
 # This will make the main.js file in the /dist folder
 $ make build
 ```
+
+What happens behind the hoods:
+![build sequence uml](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/suipotryot/fabricashape/feat/addScaleShape/docs/build/build.uml&version=1)
