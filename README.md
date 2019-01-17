@@ -20,5 +20,14 @@ The project belongs on webpack to generate a unique and compact javascript file.
 $ make build
 ```
 
-What happens behind the hoods:
+### What happens behind the hoods
 ![build sequence uml](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/suipotryot/fabricashape/feat/addScaleShape/docs/build/build.uml&version=1)
+
+## Tests
+To run unit tests:
+```sh
+$ make test
+```
+
+### What happens behind the hoods
+![build sequence uml](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/suipotryot/fabricashape/feat/addScaleShape/docs/tests/tests.uml&version=1)

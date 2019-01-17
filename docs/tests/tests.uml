@@ -1,0 +1,9 @@
+@startuml
+actor developper
+
+developper -> make : "make test"
+make -> webpack : calls "webpack"
+webpack -> webpack : uses webpack-test.config.js
+webpack -> webpack : imports test files\nvia /all-test.js script
+webpack -> "dist/testBundle.js"  : compiles tests in one file
+@enduml
