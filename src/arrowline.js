@@ -1,5 +1,9 @@
 import {fabric} from 'fabric'
 
+/**
+ * An Arrowline is a group that looks like a double arrowed line:
+ *       <------->
+ */
 export class Arrowline extends fabric.Group {
 
     constructor() {

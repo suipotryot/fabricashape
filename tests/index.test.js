@@ -1,6 +1,8 @@
-import {Canvas} from '../src/index'
+import {fabric} from 'fabric'
 import {assert} from 'chai'
 import fs from 'fs'
+
+import {Canvas} from '../src/index'
 
 // Init fake 'document' to simulate DOM for tests
 fs.readFile('./tests/example2D.html', 'utf8', (err,data) => {
@@ -69,14 +71,44 @@ describe('Canvas', () => {
             // Arrange
             const canvas = new Canvas('example2D')
             const shape = new fabric.Rect({width: 10, height: 10})
-            const scaleValue = 13.89
+            const value = 13.89
         
             // Act
-            const result = canvas.setScale(shape, scaleValue)
+            const result = canvas.setScale({shape, value})
         
             // Assert
-            assert.equal(canvas.scaleShape, shape)
-            assert.equal(canvas.scaleValue, scaleValue)
+            assert.equal(canvas.scale.shape, shape)
+            assert.equal(canvas.scale.value, value)
+        });
+
+        it('Should save only shape if no value is given.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+            const shape = new fabric.Rect({width: 10, height: 10})
+            const value = 13.89
+        
+            // Act
+            canvas.setScale({shape, value})
+            const result = canvas.setScale({shape})
+        
+            // Assert
+            assert.equal(canvas.scale.shape, shape)
+            assert.equal(canvas.scale.value, value)
+        });
+
+        it('Should save only value if no shape is given.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+            const shape = new fabric.Rect({width: 10, height: 10})
+            const value = 13.89
+        
+            // Act
+            canvas.setScale({shape, value})
+            const result = canvas.setScale({value})
+        
+            // Assert
+            assert.equal(canvas.scale.shape, shape)
+            assert.equal(canvas.scale.value, value)
         });
     });
 });
