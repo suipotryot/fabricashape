@@ -7,20 +7,17 @@ export class Canvas extends fabric.Canvas {
     constructor(domElemendId) {
         super(domElemendId)
         this.domElemendId = domElemendId
-        this.createReferenceScaleLine()
+        this.scale = {value: null, shape: null}
+
     }
 
-    createReferenceScaleLine() {
-        const line = new Arrowline()
-        line.left = 20
-        line.top = 10
-        this.add(line)
-        this.requestRenderAll()
-
-        //const fillReferenceLine = () => {
-        //    this.item(this.size() - 1).set('fill', selectList.options[selectList.selectedIndex].style.backgroundColor)
-        //    this.renderAll()
-        //}
+    setScale(scaleDefinition) {
+        if (scaleDefinition.shape) {
+            this.scale.shape = scaleDefinition.shape
+        }
+        if (scaleDefinition.value) {
+            this.scale.value = scaleDefinition.value
+        }
     }
 
     /* 
