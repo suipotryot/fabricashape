@@ -2,7 +2,7 @@ import {fabric} from 'fabric'
 import {assert} from 'chai'
 import fs from 'fs'
 
-import {Canvas} from '../src/index'
+import {Canvas, Arrowline} from '../src/index'
 
 // Init fake 'document' to simulate DOM for tests
 fs.readFile('./tests/example2D.html', 'utf8', (err,data) => {
@@ -109,6 +109,23 @@ describe('Canvas', () => {
             // Assert
             assert.equal(canvas.scale.shape, shape)
             assert.equal(canvas.scale.value, value)
+        });
+    });
+});
+
+describe('Arrowline', () => {
+    describe('constructor', () => {
+        it('Should create a body and 2 arrows in a group.', () => {
+            // Arrange
+            // Act
+            const arrowline = new Arrowline()
+            const arrowlineObjects = arrowline.getObjects()
+        
+            // Assert
+            assert.equal(arrowline.size(), 3)
+            assert.equal(arrowlineObjects[0].type, 'rect')
+            assert.equal(arrowlineObjects[1].type, 'triangle')
+            assert.equal(arrowlineObjects[2].type, 'triangle')
         });
     });
 });
