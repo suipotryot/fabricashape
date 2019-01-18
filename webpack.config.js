@@ -8,7 +8,8 @@ var config = {
     output: {
         filename: 'main.js',
         library: 'fabricashape'
-    }
+    },
+    watch: true // Re-build on each file change
 };
 
 module.exports = config;
