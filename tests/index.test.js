@@ -3,6 +3,7 @@ import {assert} from 'chai'
 import fs from 'fs'
 
 import {Canvas, Arrowline} from '../src/index'
+import {RECT_DISABLED_CONTROLS} from '../src/constants'
 
 // Init fake 'document' to simulate DOM for tests
 fs.readFile('./tests/example2D.html', 'utf8', (err,data) => {
@@ -115,17 +116,38 @@ describe('Canvas', () => {
 
 describe('Arrowline', () => {
     describe('constructor', () => {
+
+            let arrowline, arrowlineObjects
+
+        beforeEach(() => {
+            arrowline = new Arrowline()
+            arrowlineObjects = arrowline.getObjects()
+        })
+
         it('Should create a body and 2 arrows in a group.', () => {
             // Arrange
             // Act
-            const arrowline = new Arrowline()
-            const arrowlineObjects = arrowline.getObjects()
-        
             // Assert
             assert.equal(arrowline.size(), 3)
             assert.equal(arrowlineObjects[0].type, 'rect')
             assert.equal(arrowlineObjects[1].type, 'triangle')
             assert.equal(arrowlineObjects[2].type, 'triangle')
+        });
+
+        it('Should set hasControls to true.', () => {
+            // Arrange
+            // Act
+            // Assert
+            assert.isTrue(arrowline.hasControls)
+        });
+
+        it('Should disable any control in RECT_DISABLED_CONTROLS.', () => {
+            // Arrange
+            // Act
+            // Assert
+            RECT_DISABLED_CONTROLS.forEach((control) => {
+                assert.isFalse(arrowline.isControlVisible(control), `Control ${control} is visible while it shouldn't.`)
+            })
         });
     });
 });
