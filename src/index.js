@@ -7,7 +7,30 @@ export class Canvas extends fabric.Canvas {
         super(domElemendId)
         this.domElemendId = domElemendId
         this.scale = {value: null, shape: null}
+        this._lockObjectsToBoundaries()
     }
+
+    _lockObjectsToBoundaries() {
+        this.on('object:moving', function (e) {
+            var obj = e.target;
+            // if object is too big ignore
+            if(obj.currentHeight > this.height || obj.currentWidth > this.width){
+                return;
+            }        
+            obj.setCoords();        
+            // top-left  corner
+            if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0){
+                obj.top = Math.max(obj.top, obj.top-obj.getBoundingRect().top);
+                obj.left = Math.max(obj.left, obj.left-obj.getBoundingRect().left);
+            }
+            // bot-right corner
+            if(obj.getBoundingRect().top+obj.getBoundingRect().height  > this.height || obj.getBoundingRect().left+obj.getBoundingRect().width  > this.width){
+                obj.top = Math.min(obj.top, this.height-obj.getBoundingRect().height+obj.top-obj.getBoundingRect().top);
+                obj.left = Math.min(obj.left, this.width-obj.getBoundingRect().width+obj.left-obj.getBoundingRect().left);
+            }
+        });
+    }
+
 
     setScale(scaleDefinition) {
         if (scaleDefinition.shape) {
@@ -56,19 +79,19 @@ export class Canvas extends fabric.Canvas {
     /**
      * Creates a line user can click on to duplicate it and use the duplicate into the scene.
      */
-    createReferenceLine(selectList) {
-        const referenceLine = new fabric['Rect']({ top: 0, left: 205, width: 80, height: 17, fill: selectList.options[selectList.selectedIndex].style.backgroundColor})
+    createReferenceLine(selectObject) {
+        const referenceLine = new fabric['Rect']({ top: 5, left: 5, width: 80, height: 17, fill: selectObject.options[selectObject.selectedIndex].style.backgroundColor})
         this.add(referenceLine)
         this.item(this.size() - 1).hasControls = false
         this.requestRenderAll()
 
         const fillReferenceLine = () => {
-            this.item(this.size() - 1).set('fill', selectList.options[selectList.selectedIndex].style.backgroundColor)
+            this.item(this.size() - 1).set('fill', selectObject.options[selectObject.selectedIndex].style.backgroundColor)
             this.renderAll()
         }
 
         const duplicateReferenceLine = () => {
-            this.createReferenceLine(selectList)
+            this.createReferenceLine(selectObject)
             referenceLine.hasControls = true
             RECT_DISABLED_CONTROLS.forEach((control) => {
                 referenceLine.setControlVisible(control, false)
@@ -80,8 +103,8 @@ export class Canvas extends fabric.Canvas {
             referenceLine.off('mousedown')
         })
 
-        selectList.removeEventListener('change', fillReferenceLine)
-        selectList.addEventListener('change', fillReferenceLine)
+        selectObject.removeEventListener('change', fillReferenceLine)
+        selectObject.addEventListener('change', fillReferenceLine)
     }
 }
 
@@ -89,17 +112,88 @@ export class Canvas extends fabric.Canvas {
  * An Arrowline is a group that looks like a double arrowed line:
  *       <------->
  */
-export class Arrowline extends fabric.Group {
+export class Arrowline extends fabric.Rect {
 
     constructor(options) {
-        const body = new fabric['Rect']({ top: 6, left: 0, width: 80, height: 7, fill: 'blue'})
-        const leftTriangle = new fabric['Triangle']({ top: 19, left: -18, width: 18, height: 18, fill: 'blue', angle: -90})
-        const rightTriangle = new fabric['Triangle']({ top: 0, left: 80+18, width: 18, height: 18, fill: 'blue', angle: 90})
-        super([body, leftTriangle, rightTriangle], options);
+        super(options)
+        this.type = "arrowline"
+
         this.hasControls = true
         RECT_DISABLED_CONTROLS.forEach((control) => {
             this.setControlVisible(control, false)
         })
+        this.set('fill', 'transparent')
+
+        this.on(
+            {
+                'added': () => {
+                    this.body = new fabric.Rect()
+                    this.leftTriangle = new fabric.Triangle()
+                    this.rightTriangle = new fabric.Triangle()
+
+                    this._setChildrenPosition()
+
+                    const components = [this.body, this.leftTriangle, this.rightTriangle]
+
+                    components.forEach((component) => {
+                        component.hasControls = false
+                        component.selectable = false
+                        this.canvas.add(component)
+                        component.sendToBack()
+                    })
+                },
+                'moving': this._setChildrenPosition,
+                'scaling': this._setChildrenPosition,
+                'rotating': this._setChildrenPosition,
+            }
+        )
     }
+
+    setText(text) {
+        this.text = text
+    }
+
+    _setChildrenPosition() {
+        const degreesToRadiansRatio = Math.PI / 180,
+            height = this.height,
+            width = this.width,
+            cosTeta = Math.cos(this.angle * degreesToRadiansRatio),
+            sinTeta = Math.sin(this.angle * degreesToRadiansRatio)
+
+        if (this.text) {
+            this.text.set({
+                top: this.top + 0.5 * (width - 0.5 * this.text.width) * sinTeta + 0.5 * (this.height - this.text.height),
+                left: this.left + 0.5 * width * cosTeta,
+            })
+        }
+
+        this.body.set({
+            top: this.top + height  * sinTeta + (height / 4) * cosTeta,
+            left: this.left + height * cosTeta - (height / 4) * sinTeta,
+            width: width - 2 * height,
+            height: height / 2,
+            angle: this.angle,
+            fill: 'blue',
+        })
+
+        this.leftTriangle.set({
+            top: this.top + height * cosTeta,
+            left: this.left - height * sinTeta,
+            width: height,
+            height: height,
+            angle: this.angle - 90,
+            fill: 'blue',
+        })
+
+        this.rightTriangle.set({
+            top: this.top + width * sinTeta,
+            left: this.left + width * cosTeta,
+            width: height,
+            height: height,
+            angle: this.angle + 90,
+            fill: 'blue',
+        })
+    }
+
 }
 

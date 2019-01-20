@@ -27,7 +27,7 @@
                     <div class="sidebar-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a id="addArrowLine" class="nav-link" href="#" onClick="addArrowLine({left: 0, top: 0})">
+                                <a id="addArrowLine" class="nav-link" href="#" onClick="addArrowLine({left: 50, top: 40, width: 200, height: 30, text: '12m'})">
                                     <span data-feather="home"></span>
                                     Add arrow line <span class="sr-only"></span>
                                 </a>
@@ -266,7 +266,12 @@
             resizeCanvas()
 
             function addArrowLine(options) {
-                canvas.add(new fabricashape.Arrowline(options))
+                const arrowline = new fabricashape.Arrowline(options)
+                const text = new fabric.Text('12m') 
+                arrowline.setText(text)
+                canvas.add(arrowline)
+                canvas.add(text)
+
             }
 
         </script>

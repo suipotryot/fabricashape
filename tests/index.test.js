@@ -1,6 +1,7 @@
 import {fabric} from 'fabric'
 import {assert} from 'chai'
 import fs from 'fs'
+import * as events from 'events'
 
 import {Canvas, Arrowline} from '../src/index'
 import {RECT_DISABLED_CONTROLS} from '../src/constants'
@@ -148,6 +149,29 @@ describe('Arrowline', () => {
             RECT_DISABLED_CONTROLS.forEach((control) => {
                 assert.isFalse(arrowline.isControlVisible(control), `Control ${control} is visible while it shouldn't.`)
             })
+        });
+
+        it('Should not resize triangles on group resize.', () => {
+            // Arrange
+            arrowline.scale(12)
+
+            // Act
+            arrowline.fire('scaling')
+
+            // Assert
+            assert.equal(arrowline.leftTriangle.scaleY, arrowline.width / (arrowline.width * 12))
+            assert.equal(arrowline.rightTriangle.scaleY, arrowline.width / (arrowline.width * 12))
+        });
+
+        it('Should rescale body to touch both arrows.', () => {
+            // Arrange
+            arrowline.scale(12)
+        
+            // Act
+            arrowline.fire('scaling')
+        
+            // Assert
+            assert.equal(arrowline.body.scaleX, arrowline.width / (arrowline.width * 12))
         });
     });
 });
