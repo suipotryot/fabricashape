@@ -1,5 +1,5 @@
 var config = {
-    mode: 'production',
+    mode: 'development',
     entry: {
         'main.js': [
             './src/index.js',
@@ -8,7 +8,9 @@ var config = {
     output: {
         filename: 'main.js',
         library: 'fabricashape'
-    }
+    },
+    devtool: "source-map",
+    watch: true // Re-build on each file change
 };
 
 module.exports = config;
