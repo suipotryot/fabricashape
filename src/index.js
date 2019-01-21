@@ -80,7 +80,7 @@ export class Canvas extends fabric.Canvas {
      * Creates a line user can click on to duplicate it and use the duplicate into the scene.
      */
     createReferenceLine(selectObject) {
-        const referenceLine = new fabric['Rect']({ top: 5, left: 5, width: 80, height: 17, fill: selectObject.options[selectObject.selectedIndex].style.backgroundColor})
+        const referenceLine = new fabric.Rect({ top: 5, left: 5, width: 80, height: 17, fill: selectObject.options[selectObject.selectedIndex].style.backgroundColor})
         this.add(referenceLine)
         this.item(this.size() - 1).hasControls = false
         this.requestRenderAll()
@@ -131,7 +131,7 @@ export class Arrowline extends fabric.Rect {
                     this.leftTriangle = new fabric.Triangle()
                     this.rightTriangle = new fabric.Triangle()
 
-                    this._setChildrenPosition()
+                    this._setComponentsPosition()
 
                     const components = [this.body, this.leftTriangle, this.rightTriangle]
 
@@ -142,9 +142,10 @@ export class Arrowline extends fabric.Rect {
                         component.sendToBack()
                     })
                 },
-                'moving': this._setChildrenPosition,
-                'scaling': this._setChildrenPosition,
-                'rotating': this._setChildrenPosition,
+                'modified': this._setComponentsPosition,
+                'scaling': this._setComponentsPosition,
+                'moving': this._setComponentsPosition,
+                'rotating': this._setComponentsPosition,
             }
         )
     }
@@ -153,17 +154,19 @@ export class Arrowline extends fabric.Rect {
         this.text = text
     }
 
-    _setChildrenPosition() {
+    _setComponentsPosition() {
         const degreesToRadiansRatio = Math.PI / 180,
-            height = this.height,
-            width = this.width,
+            height = this.height * this.scaleY,
+            width = this.width * this.scaleX,
             cosTeta = Math.cos(this.angle * degreesToRadiansRatio),
-            sinTeta = Math.sin(this.angle * degreesToRadiansRatio)
+            sinTeta = Math.sin(this.angle * degreesToRadiansRatio),
+            boundingRect = this.getBoundingRect()
+
 
         if (this.text) {
             this.text.set({
-                top: this.top + 0.5 * (width - 0.5 * this.text.width) * sinTeta + 0.5 * (this.height - this.text.height),
-                left: this.left + 0.5 * width * cosTeta,
+                top: boundingRect.top + 0.5 * (boundingRect.height - this.text.height),
+                left: boundingRect.left + 0.5 * (boundingRect.width - this.text.width),
             })
         }
 
