@@ -197,6 +197,7 @@ export class Line extends fabric.Rect {
     }
 
 }
+
 /**
  * An Arrowline is a group that looks like a double arrowed line:
  *       <------->
