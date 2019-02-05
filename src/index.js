@@ -41,6 +41,10 @@ export class Canvas extends fabric.Canvas {
         }
     }
 
+    getScale() {
+        return this.scale
+    }
+
     /* 
      * @param choices: a list of (label, color)
      *  example: [
@@ -108,16 +112,13 @@ export class Canvas extends fabric.Canvas {
     }
 }
 
-/**
- * An Arrowline is a group that looks like a double arrowed line:
- *       <------->
- */
-export class Arrowline extends fabric.Rect {
-
+export class Line extends fabric.Rect {
     constructor(options) {
         super(options)
-        this.type = "arrowline"
-
+        this.bodyFill = options.fill
+        this.bodyText = options.text || ""
+        this.components = []
+        this.type = "line"
         this.hasControls = true
         RECT_DISABLED_CONTROLS.forEach((control) => {
             this.setControlVisible(control, false)
@@ -126,22 +127,7 @@ export class Arrowline extends fabric.Rect {
 
         this.on(
             {
-                'added': () => {
-                    this.body = new fabric.Rect()
-                    this.leftTriangle = new fabric.Triangle()
-                    this.rightTriangle = new fabric.Triangle()
-
-                    this._setComponentsPosition()
-
-                    const components = [this.body, this.leftTriangle, this.rightTriangle]
-
-                    components.forEach((component) => {
-                        component.hasControls = false
-                        component.selectable = false
-                        this.canvas.add(component)
-                        component.sendToBack()
-                    })
-                },
+                'added': this._initComponents,
                 'modified': this._setComponentsPosition,
                 'scaling': this._setComponentsPosition,
                 'moving': this._setComponentsPosition,
@@ -150,8 +136,96 @@ export class Arrowline extends fabric.Rect {
         )
     }
 
+    _initComponents() {
+        this.text = new fabric.Text('', {visible: false}) 
+        this.body = new fabric.Rect({
+            width: this.width,
+            height: this.height,
+            top: this.top,
+            left: this.left,
+            fill: this.bodyFill,
+        })
+        this.components = [this.text, this.body]
+
+        this.components.forEach((component) => {
+            component.hasControls = false
+            component.selectable = false
+            this.canvas.add(component)
+            component.sendToBack()
+        })
+        this.setText(this.bodyText)
+    }
+
+    _setComponentsPosition() {
+        const degreesToRadiansRatio = Math.PI / 180,
+            height = this.height * this.scaleY,
+            width = this.width * this.scaleX,
+            cosTeta = Math.cos(this.angle * degreesToRadiansRatio),
+            sinTeta = Math.sin(this.angle * degreesToRadiansRatio),
+            boundingRect = this.getBoundingRect()
+
+
+        if (this.text) {
+            this.text.set({
+                top: boundingRect.top + 0.5 * (boundingRect.height - this.text.height),
+                left: boundingRect.left + 0.5 * (boundingRect.width - this.text.width),
+            })
+        }
+
+        this.body.set({
+            top: this.top,
+            left: this.left,
+            width: width,
+            height: height,
+            angle: this.angle,
+        })
+
+    }
+
+    getComponents() {
+        return this.components
+    }
+
     setText(text) {
-        this.text = text
+        if (text.slice(-1) != "m") {
+            text += "m"
+        }
+        this.text.set({
+            text: text
+        })
+        this._setComponentsPosition()
+    }
+
+}
+/**
+ * An Arrowline is a group that looks like a double arrowed line:
+ *       <------->
+ */
+export class Arrowline extends Line {
+
+    constructor(options) {
+        super(options)
+        this.type = "arrowline"
+        this.bodyFill = options.fill
+    }
+
+    _initComponents() {
+        this.text = new fabric.Text('', {backgroundColor: "white"}) 
+        this.body = new fabric.Rect({fill: this.bodyFill})
+        this.leftTriangle = new fabric.Triangle({fill: this.bodyFill})
+        this.rightTriangle = new fabric.Triangle({fill: this.bodyFill})
+
+        this._setComponentsPosition()
+
+        this.components = [this.text, this.body, this.leftTriangle, this.rightTriangle]
+
+        this.components.forEach((component) => {
+            component.hasControls = false
+            component.selectable = false
+            this.canvas.add(component)
+            component.sendToBack()
+        })
+        this.setText(this.bodyText)
     }
 
     _setComponentsPosition() {
@@ -176,7 +250,6 @@ export class Arrowline extends fabric.Rect {
             width: width - 2 * height,
             height: height / 2,
             angle: this.angle,
-            fill: 'blue',
         })
 
         this.leftTriangle.set({
@@ -185,7 +258,6 @@ export class Arrowline extends fabric.Rect {
             width: height,
             height: height,
             angle: this.angle - 90,
-            fill: 'blue',
         })
 
         this.rightTriangle.set({
@@ -194,7 +266,6 @@ export class Arrowline extends fabric.Rect {
             width: height,
             height: height,
             angle: this.angle + 90,
-            fill: 'blue',
         })
     }
 
