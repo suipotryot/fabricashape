@@ -3,7 +3,7 @@ import {assert} from 'chai'
 import fs from 'fs'
 import * as events from 'events'
 
-import {Canvas, Arrowline} from '../src/index'
+import {Canvas, Arrowline, Line} from '../src/index'
 import {RECT_DISABLED_CONTROLS} from '../src/constants'
 
 // Init fake 'document' to simulate DOM for tests
@@ -115,24 +115,160 @@ describe('Canvas', () => {
     });
 });
 
-describe('Arrowline', () => {
+describe('Line', () => {
+
+    let canvas, line, lineComponents
+
+    beforeEach(() => {
+        canvas = new Canvas('myId')
+        line = new Line({top: 1, left: 2, width: 3, height: 4, angle: 5})
+    })
+
     describe('constructor', () => {
-
-            let arrowline, arrowlineObjects
-
-        beforeEach(() => {
-            arrowline = new Arrowline()
-            arrowlineObjects = arrowline.getObjects()
-        })
-
-        it('Should create a body and 2 arrows in a group.', () => {
+        it('Should set type to "line".', () => {
             // Arrange
             // Act
             // Assert
-            assert.equal(arrowline.size(), 3)
-            assert.equal(arrowlineObjects[0].type, 'rect')
-            assert.equal(arrowlineObjects[1].type, 'triangle')
-            assert.equal(arrowlineObjects[2].type, 'triangle')
+            assert.equal(line.type, 'line')
+        });
+
+        it('Should set fill of main line to transparent.', () => {
+            // Arrange
+            // Act
+            // Assert
+            assert.equal(line.fill, 'transparent')
+        });
+
+        it('Should set hasControls to true.', () => {
+            // Arrange
+            // Act
+            // Assert
+            assert.isTrue(line.hasControls)
+        });
+
+        it('Should disable any control in RECT_DISABLED_CONTROLS.', () => {
+            // Arrange
+            // Act
+            // Assert
+            RECT_DISABLED_CONTROLS.forEach((control) => {
+                assert.isFalse(line.isControlVisible(control), `Control ${control} is visible while it shouldn't.`)
+            })
+        });
+
+        it('Should rescale body to equal main line.', () => {
+            // Arrange
+
+            // Act
+            canvas.add(line)
+            line.scale(12)
+            line.fire('scaling')
+
+            // Assert
+            assert.equal(line.body.scaleX, 1)
+            assert.equal(line.body.scaleY, 1)
+            assert.equal(line.scaleY, 12)
+            assert.equal(line.body.top, line.top)
+            assert.equal(line.body.left, line.left)
+            assert.equal(line.body.height, line.height * line.scaleY)
+            assert.equal(line.body.width, line.width * line.scaleX)
+            assert.equal(line.body.angle, line.angle)
+        });
+
+        it('Should set body fill to given fill.', () => {
+            // Arrange
+            const expectedFill = "blue"
+        
+            // Act
+            line = new Line({fill: expectedFill})
+            canvas.add(line)
+        
+            // Assert
+            assert.equal(line.body.fill, expectedFill)
+        });
+
+        it('Should set text to given text.', () => {
+            // Arrange
+            const expectedText = "12m"
+        
+            // Act
+            line = new Line({text: expectedText})
+            canvas.add(line)
+        
+            // Assert
+            assert.equal(line.text.text, expectedText)
+        });
+    });
+
+    describe('getComponents', () => {
+        it('Should return components of the line.', () => {
+            // Arrange
+            // Act
+            canvas.add(line)
+            lineComponents = line.getComponents()
+
+            // Assert
+            assert.equal(lineComponents.length, 2)
+            assert.equal(lineComponents[0].type, 'text')
+            assert.equal(lineComponents[1].type, 'rect')
+        });
+    });
+
+    describe('setText', () => {
+        it('Should change component text.', () => {
+            // Arrange
+            const expectedText = "12.4m"
+        
+            // Act
+            canvas.add(line)
+            line.setText(expectedText)
+        
+            // Assert
+            assert.equal(line.getComponents()[0].text, expectedText)
+        });
+
+        it('Should add "m" at the end if not already set.', () => {
+            // Arrange
+            const expectedText = "12.4m"
+        
+            // Act
+            canvas.add(line)
+            line.setText("12.4")
+        
+            // Assert
+            assert.equal(line.getComponents()[0].text, expectedText)
+        });
+    });
+});
+
+describe('Arrowline', () => {
+    describe('constructor', () => {
+
+        let canvas, arrowline, arrowlineComponents
+
+        beforeEach(() => {
+            canvas = new Canvas('myId')
+            arrowline = new Arrowline({top: 1, left: 2, width: 3, height: 4, angle: 5})
+        })
+
+        it('Should set type to "arrowline".', () => {
+            // Arrange
+            // Act
+            // Assert
+            assert.equal(arrowline.type, 'arrowline')
+        });
+
+        it('Should create a text, a body and 2 arrows in a group.', () => {
+            // Arrange
+            // Act
+            canvas.add(arrowline)
+            arrowlineComponents = arrowline.getComponents()
+
+            // Assert
+            assert.equal(arrowlineComponents.length, 4)
+            assert.equal(arrowlineComponents[0].type, 'text')
+            assert.equal(arrowlineComponents[1].type, 'rect')
+            assert.equal(arrowlineComponents[2].type, 'triangle')
+            assert.equal(arrowlineComponents[3].type, 'triangle')
         });
 
         it('Should set hasControls to true.', () => {
@@ -156,22 +292,54 @@ describe('Arrowline', () => {
             arrowline.scale(12)
 
             // Act
+            canvas.add(arrowline)
             arrowline.fire('scaling')
 
             // Assert
-            assert.equal(arrowline.leftTriangle.scaleY, arrowline.width / (arrowline.width * 12))
-            assert.equal(arrowline.rightTriangle.scaleY, arrowline.width / (arrowline.width * 12))
+            assert.equal(arrowline.leftTriangle.scaleY, 1)
+            assert.equal(arrowline.rightTriangle.scaleY, 1)
         });
 
         it('Should rescale body to touch both arrows.', () => {
             // Arrange
             arrowline.scale(12)
+            const degreesToRadiansRatio = Math.PI / 180,
+                height = arrowline.height * arrowline.scaleY,
+                width = arrowline.width * arrowline.scaleX,
+                cosTeta = Math.cos(arrowline.angle * degreesToRadiansRatio),
+                sinTeta = Math.sin(arrowline.angle * degreesToRadiansRatio),
+                boundingRect = arrowline.getBoundingRect(),
+                expectedTop = arrowline.top + height  * sinTeta + (height / 4) * cosTeta,
+                expectedLeft = arrowline.left + height * cosTeta - (height / 4) * sinTeta,
+                expectedWidth = width - 2 * height,
+                expectedHeight = height / 2,
+                expectedAngle = arrowline.angle
+
+            // Act
+            canvas.add(arrowline)
+            arrowline.fire('scaling')
+
+            // Assert
+            assert.equal(arrowline.body.scaleX, 1)
+            assert.equal(arrowline.body.top, expectedTop)
+            assert.equal(arrowline.body.left, expectedLeft)
+            assert.equal(arrowline.body.height, expectedHeight)
+            assert.equal(arrowline.body.width, expectedWidth)
+            assert.equal(arrowline.body.angle, expectedAngle)
+        });
+
+        it('Should set body fill to given fill.', () => {
+            // Arrange
+            const expectedFill = "green"
         
             // Act
-            arrowline.fire('scaling')
+            arrowline = new Arrowline({fill: expectedFill})
+            canvas.add(arrowline)
         
             // Assert
-            assert.equal(arrowline.body.scaleX, arrowline.width / (arrowline.width * 12))
+            assert.equal(arrowline.body.fill, expectedFill)
+            assert.equal(arrowline.leftTriangle.fill, expectedFill)
+            assert.equal(arrowline.rightTriangle.fill, expectedFill)
         });
     });
 });
