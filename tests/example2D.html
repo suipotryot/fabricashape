@@ -300,6 +300,32 @@
                 canvas.renderAll()
             }
 
+            let image
+
+            function addImage(e) {
+                const input = e.target
+                const reader = new FileReader()
+
+                reader.onload = () => {
+                    const img = document.createElement('img')
+                    img.src = reader.result
+
+                    image = new fabric.Image(img)
+                    image.scale(canvas.height/image.height)
+                    canvas.add(image)
+                    canvas.renderAll()
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+
+            function lockImage() {
+                image.hasControls = false
+                image.selectable = false
+                canvas.discardActiveObject();
+                canvas.renderAll()
+            }
+
         </script>
 
         <!-- Vendors: jQuery first, then Popper.js, then Bootstrap JS -->
