@@ -7,7 +7,18 @@ export class Canvas extends fabric.Canvas {
         super(domElemendId)
         this.domElemendId = domElemendId
         this.scale = {value: null, shape: null}
-        this._lockObjectsToBoundaries()
+        // this._lockObjectsToBoundaries()
+
+
+        this.on(
+            {
+                'event:drop': this._addImage,
+            }
+        )
+    }
+
+    _addImage(image) {
+        console.log(image);
     }
 
     _lockObjectsToBoundaries() {
@@ -151,7 +162,7 @@ export class Line extends fabric.Rect {
             component.hasControls = false
             component.selectable = false
             this.canvas.add(component)
-            component.sendToBack()
+            component.sendBackwards()
         })
         this.setText(this.bodyText)
     }
@@ -218,13 +229,13 @@ export class Arrowline extends Line {
 
         this._setComponentsPosition()
 
-        this.components = [this.text, this.body, this.leftTriangle, this.rightTriangle]
+        this.components = [this.body, this.leftTriangle, this.rightTriangle, this.text]
 
         this.components.forEach((component) => {
             component.hasControls = false
             component.selectable = false
             this.canvas.add(component)
-            component.sendToBack()
+            component.sendBackwards()
         })
         this.setText(this.bodyText)
     }
