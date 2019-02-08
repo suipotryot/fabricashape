@@ -7,7 +7,31 @@ export class Canvas extends fabric.Canvas {
         super(domElemendId)
         this.domElemendId = domElemendId
         this.scale = {value: null, shape: null}
-        this._lockObjectsToBoundaries()
+        this.backgroundImage = null
+        // this._lockObjectsToBoundaries()
+    }
+
+    addImage(imageFile) {
+        const reader = new FileReader()
+
+        reader.onload = () => {
+            const img = document.createElement('img')
+            img.src = reader.result
+
+            this.backgroundImage = new fabric.Image(img)
+            this.backgroundImage.scale(this.height/this.backgroundImage.height)
+            this.add(this.backgroundImage)
+            this.renderAll()
+        };
+
+        reader.readAsDataURL(imageFile);
+    }
+
+    lockImage() {
+        this.backgroundImage.hasControls = false
+        this.backgroundImage.selectable = false
+        this.discardActiveObject();
+        this.renderAll()
     }
 
     _lockObjectsToBoundaries() {
@@ -151,7 +175,7 @@ export class Line extends fabric.Rect {
             component.hasControls = false
             component.selectable = false
             this.canvas.add(component)
-            component.sendToBack()
+            component.sendBackwards()
         })
         this.setText(this.bodyText)
     }
@@ -218,13 +242,13 @@ export class Arrowline extends Line {
 
         this._setComponentsPosition()
 
-        this.components = [this.text, this.body, this.leftTriangle, this.rightTriangle]
+        this.components = [this.body, this.leftTriangle, this.rightTriangle, this.text]
 
         this.components.forEach((component) => {
             component.hasControls = false
             component.selectable = false
             this.canvas.add(component)
-            component.sendToBack()
+            component.sendBackwards()
         })
         this.setText(this.bodyText)
     }
