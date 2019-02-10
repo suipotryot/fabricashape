@@ -141,7 +141,7 @@ export class Canvas extends fabric.Canvas {
     }
 
     createScaledLine(options) {
-        const scale = this.scale.shape.width / this.scale.value 
+        const scale = (this.scale.shape.width * this.scale.shape.scaleX) / this.scale.value 
         options.top = options.top * scale
         options.left = options.left * scale
         options.width = options.width * scale

@@ -148,7 +148,29 @@ describe('Canvas', () => {
             assert.equal(createdLine.width, 3 * scale, "width is not ok")
             assert.equal(createdLine.height, 0.4 * scale, "height is not ok")
         });
+
+        it('Should take scale shape transformations in account.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+        
+            // Act
+            const shape = new fabric.Rect({width: 10, height: 10})
+            shape.scaleX = 3
+            const value = 12.5
+            canvas.setScale({shape, value})
+            const createdLine = canvas.createScaledLine({top: 1, left: 2, width: 3, stroke: 0.4})
+        
+            // Assert
+            const scale = (3 * 10) / 12.5 // shape.width / scale value
+            assert.equal(createdLine.top, 1 * scale, "top is not ok")
+            assert.equal(createdLine.left, 2 * scale, "left is not ok")
+            assert.equal(createdLine.width, 3 * scale, "width is not ok")
+            assert.equal(createdLine.height, 0.4 * scale, "height is not ok")
+
+        });
     });
+
+    describe
 
 });
 
