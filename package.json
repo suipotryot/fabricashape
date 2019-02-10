@@ -2,7 +2,6 @@
     "name": "fabricashape",
     "version": "1.0.0",
     "description": "A tool to draw lines and surfaces in canvas, using fabric.js",
-    "private": true,
     "directories": {
         "test": "test"
     },
