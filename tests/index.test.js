@@ -113,6 +113,43 @@ describe('Canvas', () => {
             assert.equal(canvas.scale.value, value)
         });
     });
+
+    describe('lockScale', () => {
+        it('Should set scale shape hasControls attribute to false.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+        
+            // Act
+            const shape = new fabric.Rect({width: 10, height: 10})
+            const value = 13.89
+            canvas.setScale({shape, value})
+            canvas.lockScale()
+        
+            // Assert
+            assert.isFalse(canvas.scale.shape.hasControls)
+        });
+    });
+
+    describe('createScaledLine', () => {
+        it('Should create a line with dimensions calculated from scale.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+        
+            // Act
+            const shape = new fabric.Rect({width: 10, height: 10})
+            const value = 12.5
+            canvas.setScale({shape, value})
+            const createdLine = canvas.createScaledLine({top: 1, left: 2, width: 3, stroke: 0.4})
+        
+            // Assert
+            const scale = 10 / 12.5 // shape.width / scale value
+            assert.equal(createdLine.top, 1 * scale, "top is not ok")
+            assert.equal(createdLine.left, 2 * scale, "left is not ok")
+            assert.equal(createdLine.width, 3 * scale, "width is not ok")
+            assert.equal(createdLine.height, 0.4 * scale, "height is not ok")
+        });
+    });
+
 });
 
 describe('Line', () => {
@@ -238,9 +275,11 @@ describe('Line', () => {
             assert.equal(line.getComponents()[0].text, expectedText)
         });
     });
+
 });
 
 describe('Arrowline', () => {
+
     describe('constructor', () => {
 
         let canvas, arrowline, arrowlineComponents
@@ -265,10 +304,10 @@ describe('Arrowline', () => {
 
             // Assert
             assert.equal(arrowlineComponents.length, 4)
-            assert.equal(arrowlineComponents[0].type, 'text')
-            assert.equal(arrowlineComponents[1].type, 'rect')
+            assert.equal(arrowlineComponents[0].type, 'rect')
+            assert.equal(arrowlineComponents[1].type, 'triangle')
             assert.equal(arrowlineComponents[2].type, 'triangle')
-            assert.equal(arrowlineComponents[3].type, 'triangle')
+            assert.equal(arrowlineComponents[3].type, 'text')
         });
 
         it('Should set hasControls to true.', () => {
@@ -342,4 +381,5 @@ describe('Arrowline', () => {
             assert.equal(arrowline.rightTriangle.fill, expectedFill)
         });
     });
+
 });

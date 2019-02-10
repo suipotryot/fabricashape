@@ -42,10 +42,13 @@
                                     <option value="Ouvrage1" style="background-color: red">Ouvrage 1</option>
                                     <option value="Ouvrage2" style="background-color: rgb(200,100,0)">Ouvrage 2</option>
                                 </select>
-                                <input type="text" class="form-control" aria-label="size">
+                            </li>
+                            <li class="nav-item input-group">
+                                <input id="linestroke" type="text" class="form-control" aria-label="size" placeholder="épaisseur">
+                                <input id="linelenght" type="text" class="form-control" aria-label="size" placeholder="longueur">
                                 <div class="input-group-append">
                                     <span class="input-group-text">m</span>
-                                    <a class="input-group-text btn" onClick="addLine({left: 50, top: 40, width: 200, height: 30})">+</a>
+                                    <a class="input-group-text btn" onClick="addLine({left: 1, top: 2, width: document.getElementById('linelenght').value, stroke: document.getElementById('linestroke').value})">+</a>
                                 </div>
                             </li>
                             <li class="nav-item">-</li>
@@ -277,7 +280,7 @@
                     selectedColor = selectObject.options[selectObject.selectedIndex].style.backgroundColor
 
                 options["fill"] = selectedColor
-                const line = new fabricashape.Line(options)
+                const line = canvas.createScaledLine(options)
                 canvas.add(line)
                 line.setText("1")
                 canvas.renderAll()
@@ -291,7 +294,7 @@
                 const arrowline = new fabricashape.Arrowline(options)
 
                 canvas.add(arrowline)
-                canvas.setScale({shape: arrowline})
+                canvas.setScale({shape: arrowline, value: scaleValue})
             }
 
             function updateScaleValue(item) {

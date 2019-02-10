@@ -21,6 +21,7 @@ export class Canvas extends fabric.Canvas {
             this.backgroundImage = new fabric.Image(img)
             this.backgroundImage.scale(this.height/this.backgroundImage.height)
             this.add(this.backgroundImage)
+            this.backgroundImage.sendToBack()
             this.renderAll()
         };
 
@@ -67,6 +68,10 @@ export class Canvas extends fabric.Canvas {
 
     getScale() {
         return this.scale
+    }
+
+    lockScale() {
+        this.scale.shape.hasControls = false
     }
 
     /* 
@@ -134,9 +139,21 @@ export class Canvas extends fabric.Canvas {
         selectObject.removeEventListener('change', fillReferenceLine)
         selectObject.addEventListener('change', fillReferenceLine)
     }
+
+    createScaledLine(options) {
+        const scale = this.scale.shape.width / this.scale.value 
+        options.top = options.top * scale
+        options.left = options.left * scale
+        options.width = options.width * scale
+        options.height = options.stroke * scale
+
+        return new Line(options)
+    }
+
 }
 
 export class Line extends fabric.Rect {
+
     constructor(options) {
         super(options)
         this.bodyFill = options.fill
@@ -262,12 +279,11 @@ export class Arrowline extends Line {
             boundingRect = this.getBoundingRect()
 
 
-        if (this.text) {
-            this.text.set({
-                top: boundingRect.top + 0.5 * (boundingRect.height - this.text.height),
-                left: boundingRect.left + 0.5 * (boundingRect.width - this.text.width),
-            })
-        }
+        this.text.set({
+            top: boundingRect.top + 0.5 * (boundingRect.height - this.text.height),
+            left: boundingRect.left + 0.5 * (boundingRect.width - this.text.width),
+            fontSize: 18,
+        })
 
         this.body.set({
             top: this.top + height  * sinTeta + (height / 4) * cosTeta,
