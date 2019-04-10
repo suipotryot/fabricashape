@@ -1,51 +1,53 @@
 {
-    "name": "fabricashape",
-    "version": "1.0.0",
-    "description": "A tool to draw lines and surfaces in canvas, using fabric.js",
-    "directories": {
-        "test": "test"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/suipotryot/fabricashape.git"
-    },
-    "keywords": [
-        "shape",
-        "drawing",
-        "2D"
-    ],
-    "author": "Guillaume Dubus <guillaume1.dubus@gmail.com>",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/suipotryot/fabricashape/issues"
-    },
-    "homepage": "https://github.com/suipotryot/fabricashape#readme",
-    "devDependencies": {
-        "babel-core": "^6.0.0",
-        "chai": "^4.2.0",
-        "eslint": "^5.10.0",
-        "eslint-config-google": "^0.11.0",
-        "jsdom": "^13.1.0",
-        "jsdom-global": "^3.0.2",
-        "mocha": "^5.2.0",
-        "webpack": "^4.27.1",
-        "webpack-cli": "^3.1.2",
-        "webpack-node-externals": "^1.7.2",
-        "webpack-shell-plugin": "^0.5.0"
-    },
-    "babel": {
-        "presets": [
-            "env"
-        ]
-    },
-    "env": {
-        "es6": true
-    },
-    "dependencies": {
-        "fabric": "^2.4.5"
-    }
+  "name": "fabricashape",
+  "version": "1.0.1",
+  "description": "A tool to draw lines and surfaces in canvas, using fabric.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "make test",
+    "build": "make build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suipotryot/fabricashape.git"
+  },
+  "keywords": [
+    "shape",
+    "drawing",
+    "2D"
+  ],
+  "author": "Guillaume Dubus <guillaume1.dubus@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/suipotryot/fabricashape/issues"
+  },
+  "homepage": "https://github.com/suipotryot/fabricashape#readme",
+  "devDependencies": {
+    "babel-core": "^6.0.0",
+    "chai": "^4.2.0",
+    "eslint": "^5.10.0",
+    "eslint-config-google": "^0.11.0",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^5.2.0",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2",
+    "webpack-shell-plugin": "^0.5.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "env": {
+    "es6": true
+  },
+  "dependencies": {
+    "jsdom": "^13.1.0",
+    "fabric": "^2.4.5"
+  },
+  "main": "dist/main.js"
 }

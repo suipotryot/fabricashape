@@ -1,12 +1,11 @@
 var config = {
     mode: 'production',
     entry: {
-        'main.js': [
-            './src/index.js',
-        ]
+        "fabricashape.min": "./src/index.js",
     },
     output: {
-        filename: 'main.js',
+        path: __dirname + "/dist",
+        filename: "[name].js",
         library: 'fabricashape'
     }
 };

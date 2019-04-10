@@ -2,7 +2,7 @@
 REPORTER = spec
 
 build:
-	npm run build
+	./node_modules/.bin/webpack
 
 local-build:
 	./node_modules/.bin/webpack -w --config webpack-local.config.js

@@ -1,15 +1,13 @@
 var config = {
     mode: 'development',
     entry: {
-        'main.js': [
-            './src/index.js',
-        ]
+        "fabricashape": "./src/index.js"
     },
     output: {
-        filename: 'main.js',
+        path: __dirname + "/dist",
+        filename: "[name].js",
         library: 'fabricashape'
     },
-    devtool: "source-map",
     watch: true // Re-build on each file change
 };
 
