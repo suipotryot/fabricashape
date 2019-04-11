@@ -1,13 +1,11 @@
 import {fabric} from 'fabric'
 import {assert} from 'chai'
 import fs from 'fs'
-import * as events from 'events'
 
-import {Canvas, Arrowline, Line} from '../src/index'
-import {RECT_DISABLED_CONTROLS} from '../src/constants'
+import {Canvas, Arrowline, Line, Constants} from '../lib/fabricashape.js'
 
 // Init fake 'document' to simulate DOM for tests
-fs.readFile('./tests/example2D.html', 'utf8', (err,data) => {
+fs.readFile('./test/example2D.html', 'utf8', (err,data) => {
     if (err) {
         console.error(err)
         process.exit()
@@ -205,11 +203,11 @@ describe('Line', () => {
             assert.isTrue(line.hasControls)
         });
 
-        it('Should disable any control in RECT_DISABLED_CONTROLS.', () => {
+        it('Should disable any control in Constants.RECT_DISABLED_CONTROLS.', () => {
             // Arrange
             // Act
             // Assert
-            RECT_DISABLED_CONTROLS.forEach((control) => {
+            Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
                 assert.isFalse(line.isControlVisible(control), `Control ${control} is visible while it shouldn't.`)
             })
         });
@@ -225,12 +223,12 @@ describe('Line', () => {
             // Assert
             assert.equal(line.body.scaleX, 1)
             assert.equal(line.body.scaleY, 1)
-            assert.equal(line.scaleY, 12)
-            assert.equal(line.body.top, line.top)
-            assert.equal(line.body.left, line.left)
-            assert.equal(line.body.height, line.height * line.scaleY)
-            assert.equal(line.body.width, line.width * line.scaleX)
-            assert.equal(line.body.angle, line.angle)
+            assert.equal(line.scaleY, 12, "scaleY")
+            assert.equal(line.body.top, line.top, "top")
+            assert.equal(line.body.left, line.left, "left")
+            assert.equal(line.body.height, line.height * line.scaleY, "height")
+            assert.equal(line.body.width, line.width * line.scaleX, "width")
+            assert.equal(line.body.angle, line.angle, "angle")
         });
 
         it('Should set body fill to given fill.', () => {
@@ -339,11 +337,11 @@ describe('Arrowline', () => {
             assert.isTrue(arrowline.hasControls)
         });
 
-        it('Should disable any control in RECT_DISABLED_CONTROLS.', () => {
+        it('Should disable any control in Constants.RECT_DISABLED_CONTROLS.', () => {
             // Arrange
             // Act
             // Assert
-            RECT_DISABLED_CONTROLS.forEach((control) => {
+            Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
                 assert.isFalse(arrowline.isControlVisible(control), `Control ${control} is visible while it shouldn't.`)
             })
         });

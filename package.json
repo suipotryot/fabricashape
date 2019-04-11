@@ -1,53 +1,63 @@
 {
   "name": "fabricashape",
-  "version": "1.0.1",
-  "description": "A tool to draw lines and surfaces in canvas, using fabric.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
+  "version": "1.0.2",
+  "description": "Produce universal library with webpack and es6",
+  "main": "lib/fabricashape.js",
   "scripts": {
-    "test": "make test",
-    "build": "make build"
+    "build": "webpack --env dev && webpack --env build && npm run test",
+    "dev": "webpack --progress --colors --watch --env dev",
+    "test": "mocha --require babel-register --colors ./test/*.spec.js",
+    "test:watch": "mocha --require babel-register --colors -w ./test/*.spec.js",
+    "test:cover": "cross-env NODE_ENV=test nyc mocha --require babel-register --colors test/*.js",
+    "repl": "node -i -e \"$(< ./lib/fabricashape.js)\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/suipotryot/fabricashape.git"
+    "url": "https://github.com/i3d2c/fabricashape.git"
   },
   "keywords": [
-    "shape",
-    "drawing",
-    "2D"
+    "webpack",
+    "es6",
+    "starter",
+    "library",
+    "universal",
+    "umd",
+    "commonjs"
   ],
-  "author": "Guillaume Dubus <guillaume1.dubus@gmail.com>",
-  "license": "ISC",
+  "author": "Krasimir Tsonev",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/suipotryot/fabricashape/issues"
+    "url": "https://github.com/i3d2c/fabricashape/issues"
   },
-  "homepage": "https://github.com/suipotryot/fabricashape#readme",
+  "homepage": "https://github.com/i3d2c/fabricashape",
   "devDependencies": {
-    "babel-core": "^6.0.0",
-    "chai": "^4.2.0",
-    "eslint": "^5.10.0",
-    "eslint-config-google": "^0.11.0",
-    "jsdom-global": "^3.0.2",
-    "mocha": "^5.2.0",
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-node-externals": "^1.7.2",
-    "webpack-shell-plugin": "^0.5.0"
+    "@babel/cli": "^7.0.0-beta.51",
+    "@babel/core": "^7.0.0-beta.51",
+    "@babel/preset-env": "^7.0.0-beta.51",
+    "babel-eslint": "^8.0.3",
+    "babel-loader": "^8.0.0-beta.4",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-istanbul": "^5.1.0",
+    "babel-preset-env": "^7.0.0-beta.3",
+    "babel-register": "^7.0.0-beta.3",
+    "chai": "^4.1.2",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.0.1",
+    "eslint-loader": "^2.0.0",
+    "jsdom": "11.11.0",
+    "jsdom-global": "3.0.2",
+    "mocha": "^4.0.1",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.12.2",
+    "webpack-cli": "^3.0.8",
+    "yargs": "^10.0.3",
+    "nyc": "^13.1.0"
   },
-  "babel": {
-    "presets": [
-      "env"
-    ]
-  },
-  "env": {
-    "es6": true
+  "nyc": {
+    "sourceMap": false,
+    "instrument": false
   },
   "dependencies": {
-    "jsdom": "^13.1.0",
-    "fabric": "^2.4.5"
-  },
-  "main": "dist/main.js"
+    "fabric": "^2.7.0"
+  }
 }
