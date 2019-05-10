@@ -1,7 +1,6 @@
-import {fabric} from 'fabric'
 import {assert} from 'chai'
 
-import {Canvas, Arrowline, Constants} from '../lib/fabricashape.js'
+import {Arrowline, Canvas, Constants} from '../lib/fabricashape.js'
 
 describe('Arrowline', () => {
 
@@ -104,6 +103,21 @@ describe('Arrowline', () => {
             assert.equal(arrowline.body.fill, expectedFill)
             assert.equal(arrowline.leftTriangle.fill, expectedFill)
             assert.equal(arrowline.rightTriangle.fill, expectedFill)
+        });
+
+        it('Should be working with serialize/deserialize.', () => {
+            // Arrange
+            arrowline = new Arrowline({})
+            canvas.add(arrowline)
+            const expectedJSON = canvas.toJSON()
+        
+            // Act
+            canvas = new Canvas('myId')
+            canvas.loadFromJSON(expectedJSON)
+            const result = canvas.toJSON()
+        
+            // Assert
+            assert.deepEqual(result, expectedJSON)
         });
     });
 

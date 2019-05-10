@@ -1,3 +1,8 @@
+# TODO
+* Add unit tests to what is done
+* Add edition page
+
+
 # Install
 
 To install the library, use npm:

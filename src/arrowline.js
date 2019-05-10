@@ -5,15 +5,11 @@ import {Line} from './line'
  * An Arrowline is a group that looks like a double arrowed line:
  *       <------->
  */
-export class Arrowline extends Line {
+export const Arrowline = fabric.util.createClass(Line, {
 
-    constructor(options) {
-        super(options)
-        this.type = 'arrowline'
-        this.bodyFill = options.fill
-    }
+    type: 'arrowline',
 
-    _initComponents() {
+    _initComponents: function () {
         this.text = new fabric.Text('', {backgroundColor: 'white'})
         this.body = new fabric.Rect({fill: this.bodyFill})
         this.leftTriangle = new fabric.Triangle({fill: this.bodyFill})
@@ -23,16 +19,11 @@ export class Arrowline extends Line {
 
         this.components = [this.body, this.leftTriangle, this.rightTriangle, this.text]
 
-        this.components.forEach((component) => {
-            component.hasControls = false
-            component.selectable = false
-            this.canvas.add(component)
-            component.sendBackwards()
-        })
+        this._setupComponents()
         this.setText(this.bodyText)
-    }
+    },
 
-    _setComponentsPosition() {
+    _setComponentsPosition: function () {
         const degreesToRadiansRatio = Math.PI / 180,
             height = this.height * this.scaleY,
             width = this.width * this.scaleX,
@@ -71,4 +62,10 @@ export class Arrowline extends Line {
         })
     }
 
-}
+})
+
+fabric.Arrowline = Arrowline
+
+fabric.Arrowline.fromObject = function (object, callback) {
+    return fabric.Object._fromObject('Arrowline', object, callback);
+};

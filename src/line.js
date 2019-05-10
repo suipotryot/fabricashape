@@ -1,15 +1,21 @@
 import {fabric} from 'fabric'
 import {Constants} from './constants'
 
-export class Line extends fabric.Rect {
+export const Line = fabric.util.createClass(fabric.Rect, {
 
-    constructor(options) {
-        super(options)
-        this.bodyFill = options.fill
+    type: 'line',
+    components: [],
+    hasControls: true,
+
+    initialize: function (options) {
+        options || (options = { });
+        this.callSuper('initialize', options);
+
+        this.bodyFill = options.fill || ''
+        if (options.hasOwnProperty('bodyFill')) {
+            this.bodyFill = options.bodyFill
+        }
         this.bodyText = options.text || ''
-        this.components = []
-        this.type = 'line'
-        this.hasControls = true
         Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
             this.setControlVisible(control, false)
         })
@@ -24,9 +30,9 @@ export class Line extends fabric.Rect {
                 'rotating': this._setComponentsPosition
             }
         )
-    }
+    },
 
-    _initComponents() {
+    _initComponents: function () {
         this.text = new fabric.Text('', {visible: false})
         this.body = new fabric.Rect({
             width: this.width,
@@ -37,16 +43,27 @@ export class Line extends fabric.Rect {
         })
         this.components = [this.text, this.body]
 
+        this._setupComponents()
+        this.setText(this.bodyText)
+    },
+
+    /**
+     * _setupComponents: add the component to the canvas and set some options
+     * to avoid them from being exported/selected
+     */
+    _setupComponents: function () {
         this.components.forEach((component) => {
-            component.hasControls = false
-            component.selectable = false
+            component.set({
+                excludeFromExport: true,
+                hasControls: false,
+                selectable: false
+            })
             this.canvas.add(component)
             component.sendBackwards()
         })
-        this.setText(this.bodyText)
-    }
+    },
 
-    _setComponentsPosition() {
+    _setComponentsPosition: function () {
         const height = this.height * this.scaleY,
             width = this.width * this.scaleX,
             boundingRect = this.getBoundingRect()
@@ -66,13 +83,13 @@ export class Line extends fabric.Rect {
             angle: this.angle
         })
 
-    }
+    },
 
-    getComponents() {
+    getComponents: function () {
         return this.components
-    }
+    },
 
-    setText(text) {
+    setText: function (text) {
         if (text.slice(-1) !== 'm') {
             text += 'm'
         }
@@ -80,7 +97,23 @@ export class Line extends fabric.Rect {
             text: text
         })
         this._setComponentsPosition()
+    },
+
+    toObject: function () {
+        return fabric.util.object.extend(this.callSuper('toObject'), {
+            bodyFill: this.get('bodyFill'),
+            bodyText: this.get('bodyText')
+        });
+    },
+
+    _render: function (ctx) {
+        this.callSuper('_render', ctx);
     }
 
-}
+})
 
+fabric.Line = Line
+
+fabric.Line.fromObject = function (object, callback) {
+    return fabric.Object._fromObject('Line', object, callback);
+};

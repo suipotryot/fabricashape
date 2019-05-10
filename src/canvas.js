@@ -23,7 +23,6 @@ export class Canvas extends fabric.Canvas {
             this.backgroundImage = new fabric.Image(img)
             this.backgroundImage.scale(this.height / this.backgroundImage.height)
             this.add(this.backgroundImage)
-            this.backgroundImage.sendToBack()
             this.renderAll()
         };
 
@@ -31,6 +30,7 @@ export class Canvas extends fabric.Canvas {
     }
 
     lockImage() {
+        this.backgroundImage.sendToBack()
         this.backgroundImage.hasControls = false
         this.backgroundImage.selectable = false
         this.discardActiveObject();

@@ -86,6 +86,21 @@ describe('Line', () => {
             // Assert
             assert.equal(line.text.text, expectedText)
         });
+
+        it('Should be working with serialize/deserialize.', () => {
+            // Arrange
+            line = new Line({})
+            canvas.add(line)
+            const expectedJSON = canvas.toJSON()
+        
+            // Act
+            canvas = new Canvas('myId')
+            canvas.loadFromJSON(expectedJSON)
+            const result = canvas.toJSON()
+        
+            // Assert
+            assert.deepEqual(result, expectedJSON)
+        });
     });
 
     describe('getComponents', () => {
