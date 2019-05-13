@@ -16,6 +16,9 @@ export const Line = fabric.util.createClass(fabric.Rect, {
             this.bodyFill = options.bodyFill
         }
         this.bodyText = options.text || ''
+        if (options.hasOwnProperty('bodyFill')) {
+            this.bodyFill = options.bodyFill
+        }
         Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
             this.setControlVisible(control, false)
         })
@@ -97,13 +100,6 @@ export const Line = fabric.util.createClass(fabric.Rect, {
             text: text
         })
         this._setComponentsPosition()
-    },
-
-    toObject: function () {
-        return fabric.util.object.extend(this.callSuper('toObject'), {
-            bodyFill: this.get('bodyFill'),
-            bodyText: this.get('bodyText')
-        });
     },
 
     _render: function (ctx) {

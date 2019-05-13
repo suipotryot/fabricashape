@@ -104,8 +104,18 @@ describe('Arrowline', () => {
             assert.equal(arrowline.leftTriangle.fill, expectedFill)
             assert.equal(arrowline.rightTriangle.fill, expectedFill)
         });
+    });
 
-        it('Should be working with serialize/deserialize.', () => {
+    describe('serialize/deserialize', () => {
+
+        let canvas, arrowline
+
+        beforeEach(() => {
+            canvas = new Canvas('myId')
+            arrowline = new Arrowline({top: 1, left: 2, width: 3, height: 4, angle: 5})
+        })
+
+        it('Should be working with basics.', () => {
             // Arrange
             arrowline = new Arrowline({})
             canvas.add(arrowline)
@@ -116,6 +126,22 @@ describe('Arrowline', () => {
             canvas.loadFromJSON(expectedJSON)
             const result = canvas.toJSON()
         
+            // Assert
+            assert.deepEqual(result, expectedJSON)
+        });
+
+        it('Should take bodyText & bodyFill in account.', () => {
+            // Arrange
+            arrowline = new Arrowline({text: 'toast', bodyFill: 'blue'})
+            canvas.add(arrowline)
+            const expectedJSON = canvas.toJSON()
+        
+            // Act
+            canvas = new Canvas('myId')
+            canvas.loadFromJSON(expectedJSON)
+            const result = canvas.toJSON()
+        
+            console.log(expectedJSON)
             // Assert
             assert.deepEqual(result, expectedJSON)
         });
