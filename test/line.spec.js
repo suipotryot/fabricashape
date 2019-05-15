@@ -141,6 +141,18 @@ describe('Line', () => {
             // Assert
             assert.equal(line.getComponents()[0].text, expectedText)
         });
+
+        it('Should set bodyText of the line.', () => {
+            // Arrange
+            const expectedText = "12.4m"
+        
+            // Act
+            canvas.add(line)
+            line.setText(expectedText)
+        
+            // Assert
+            assert.equal(line.bodyText, expectedText)
+        });
     });
 
 });

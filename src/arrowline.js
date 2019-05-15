@@ -10,7 +10,7 @@ export const Arrowline = fabric.util.createClass(Line, {
     type: 'arrowline',
 
     _initComponents: function () {
-        this.text = new fabric.Text('', {backgroundColor: 'white'})
+        this.text = new fabric.Text(this.bodyText, {backgroundColor: 'white'})
         this.body = new fabric.Rect({fill: this.bodyFill})
         this.leftTriangle = new fabric.Triangle({fill: this.bodyFill})
         this.rightTriangle = new fabric.Triangle({fill: this.bodyFill})

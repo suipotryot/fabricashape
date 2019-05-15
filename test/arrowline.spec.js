@@ -132,7 +132,7 @@ describe('Arrowline', () => {
 
         it('Should take bodyText & bodyFill in account.', () => {
             // Arrange
-            arrowline = new Arrowline({text: 'toast', bodyFill: 'blue'})
+            arrowline = new Arrowline({bodyText: 'toast', bodyFill: 'blue'})
             canvas.add(arrowline)
             const expectedJSON = canvas.toJSON()
         
@@ -141,7 +141,6 @@ describe('Arrowline', () => {
             canvas.loadFromJSON(expectedJSON)
             const result = canvas.toJSON()
         
-            console.log(expectedJSON)
             // Assert
             assert.deepEqual(result, expectedJSON)
         });

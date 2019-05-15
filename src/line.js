@@ -16,8 +16,8 @@ export const Line = fabric.util.createClass(fabric.Rect, {
             this.bodyFill = options.bodyFill
         }
         this.bodyText = options.text || ''
-        if (options.hasOwnProperty('bodyFill')) {
-            this.bodyFill = options.bodyFill
+        if (options.hasOwnProperty('bodyText')) {
+            this.bodyText = options.bodyText
         }
         Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
             this.setControlVisible(control, false)
@@ -93,6 +93,7 @@ export const Line = fabric.util.createClass(fabric.Rect, {
     },
 
     setText: function (text) {
+        this.bodyText = text
         if (text.slice(-1) !== 'm') {
             text += 'm'
         }
@@ -104,6 +105,13 @@ export const Line = fabric.util.createClass(fabric.Rect, {
 
     _render: function (ctx) {
         this.callSuper('_render', ctx);
+    },
+
+    toObject: function () {
+        return fabric.util.object.extend(this.callSuper('toObject'), {
+            bodyFill: this.get('bodyFill'),
+            bodyText: this.get('bodyText')
+        });
     }
 
 })
