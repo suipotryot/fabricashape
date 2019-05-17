@@ -8,7 +8,7 @@ export class Canvas extends fabric.Canvas {
         super(domElemendId)
         this.domElemendId = domElemendId
         this.scale = {value: null, shape: null}
-        this.backgroundImage = null
+        this.customBackgroundImage = null
         // this._lockObjectsToBoundaries()
     }
 
@@ -20,9 +20,9 @@ export class Canvas extends fabric.Canvas {
 
             img.src = reader.result
 
-            this.backgroundImage = new fabric.Image(img)
-            this.backgroundImage.scale(this.height / this.backgroundImage.height)
-            this.add(this.backgroundImage)
+            this.customBackgroundImage = new fabric.Image(img)
+            this.customBackgroundImage.scale(this.height / this.customBackgroundImage.height)
+            this.add(this.customBackgroundImage)
             this.renderAll()
         };
 
@@ -30,9 +30,9 @@ export class Canvas extends fabric.Canvas {
     }
 
     lockImage() {
-        this.backgroundImage.sendToBack()
-        this.backgroundImage.hasControls = false
-        this.backgroundImage.selectable = false
+        this.customBackgroundImage.sendToBack()
+        this.customBackgroundImage.hasControls = false
+        this.customBackgroundImage.selectable = false
         this.discardActiveObject();
         this.renderAll()
     }
