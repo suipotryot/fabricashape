@@ -65,6 +65,7 @@ export class Canvas extends fabric.Canvas {
     setScale(scaleDefinition) {
         if (scaleDefinition.shape) {
             this.scale.shape = scaleDefinition.shape
+            this.scale.shape.hasControls = false
         }
         if (scaleDefinition.value) {
             this.scale.value = scaleDefinition.value
@@ -77,6 +78,17 @@ export class Canvas extends fabric.Canvas {
 
     lockScale() {
         this.scale.shape.hasControls = false
+    }
+
+    clearScale() {
+        if (this.scale.shape) {
+            console.log('clearScale')
+            console.log(this.scale.shape)
+            this.clear()
+            this.remove(this.scale.shape)
+            this.remove(this.scale.shape)
+            this.renderAll()
+        }
     }
 
     /*
