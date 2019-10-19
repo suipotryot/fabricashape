@@ -80,14 +80,28 @@ export class Canvas extends fabric.Canvas {
         this.scale.shape.hasControls = false
     }
 
+    remove(objects) {
+        console.log('biche')
+        if (Array.isArray(objects)) {
+            objects.forEach((object) => {
+                if (object.hasOwnProperty('clear')) {
+                    object.clear()
+                }
+            })
+        } else {
+            if (objects.hasOwnProperty('clear')) {
+                objects.clear()
+            }
+        }
+        this.callSuper('remove', objects)
+    }
+
     clearScale() {
+        console.log('clear scales ujbjg')
         if (this.scale.shape) {
-            console.log('clearScale')
-            console.log(this.scale.shape)
+            console.log('clear scale')
             this.clear()
             this.remove(this.scale.shape)
-            this.remove(this.scale.shape)
-            this.renderAll()
         }
     }
 

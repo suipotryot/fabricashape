@@ -104,7 +104,7 @@ export const Line = fabric.util.createClass(fabric.Rect, {
     },
 
     _render: function (ctx) {
-        this.callSuper('_render', ctx);
+        this.callSuper('_render', ctx)
     },
 
     clear: function () {
