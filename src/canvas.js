@@ -1,5 +1,4 @@
 import {fabric} from 'fabric'
-import {Constants} from './constants'
 import {Line} from './line'
 
 export class Canvas extends fabric.Canvas {
@@ -12,7 +11,15 @@ export class Canvas extends fabric.Canvas {
         // this._lockObjectsToBoundaries()
     }
 
-    addImage(imageFile) {
+    getImage() {
+        return this.customBackgroundImage
+    }
+
+    setImage(image) {
+        this.customBackgroundImage = image
+    }
+
+    setImageFromFile(imageFile) {
         const reader = new FileReader()
 
         reader.onload = () => {
@@ -33,6 +40,7 @@ export class Canvas extends fabric.Canvas {
         this.customBackgroundImage.sendToBack()
         this.customBackgroundImage.hasControls = false
         this.customBackgroundImage.selectable = false
+        this.customBackgroundImage.hoverCursor = 'default'
         this.discardActiveObject();
         this.renderAll()
     }
@@ -105,78 +113,9 @@ export class Canvas extends fabric.Canvas {
         }
     }
 
-    /*
-     * @param choices: a list of (label, color)
-     *  example: [
-     *      {label: 'label1', color: 'blue'},
-     *      {label: 'label2', color: 'rgba(255,0,0,0.5)'}
-     *   ]
-     * @return a DOM select object with corresponding options
-     */
-    listToSelectDOM(choices) {
-        const canvasholder = document.getElementById(this.domElemendId)
-
-        // Create and append select list
-        const selectList = document.createElement('select')
-
-        selectList.id = 'fabricashapeShapeChoices'
-        canvasholder.parentElement.appendChild(selectList)
-
-        // Create and append the options
-        for (let i = 0; i < choices.length; i++) {
-            const option = document.createElement('option')
-
-            option.value = choices[i].label
-            option.text = choices[i].label
-            option.style.backgroundColor = choices[i].color
-            selectList.appendChild(option)
-        }
-        return selectList
-    }
-
-    setShapeChoices(choices) {
-        const selectObject = this.listToSelectDOM(choices)
-
-        this.createReferenceLine(selectObject)
-    }
-
     /**
      * Creates a line user can click on to duplicate it and use the duplicate into the scene.
      */
-    createReferenceLine(selectObject) {
-        const referenceLine = new fabric.Rect({
-            top: 5, left: 5, width: 80, height: 17,
-            fill: selectObject.options[selectObject.selectedIndex].style.backgroundColor
-        })
-
-        this.add(referenceLine)
-        this.item(this.size() - 1).hasControls = false
-        this.requestRenderAll()
-
-        const fillReferenceLine = () => {
-            this
-                .item(this.size() - 1)
-                .set('fill', selectObject.options[selectObject.selectedIndex].style.backgroundColor)
-            this.renderAll()
-        }
-
-        const duplicateReferenceLine = () => {
-            this.createReferenceLine(selectObject)
-            referenceLine.hasControls = true
-            Constants.RECT_DISABLED_CONTROLS.forEach((control) => {
-                referenceLine.setControlVisible(control, false)
-            })
-        }
-
-        referenceLine.on('mousedown', () => {
-            duplicateReferenceLine()
-            referenceLine.off('mousedown')
-        })
-
-        selectObject.removeEventListener('change', fillReferenceLine)
-        selectObject.addEventListener('change', fillReferenceLine)
-    }
-
     createScaledLine(options) {
         const scale = (this.scale.shape.width * this.scale.shape.scaleX) / this.scale.value
 

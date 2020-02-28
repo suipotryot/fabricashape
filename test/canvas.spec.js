@@ -13,49 +13,6 @@ describe('Canvas', () => {
         });
     });
 
-    describe('listToSelectDOM', () => {
-
-        const tests = [
-            {
-                description: 'Should return a select object with as much choices',
-                list: [
-                    {label: 'label1', color: 'color1'},
-                    {label: 'label2', color: 'color2'}
-                ],
-                expectedLength: 2,
-                expectedContent: [
-                    { value: 'label1', text: 'label1' },
-                    { value: 'label2', text: 'label2' }
-
-                ]
-            },
-            {
-                description: 'Should return empty select object for empty choices',
-                list: [ ],
-                expectedLength: 0
-            }
-        ]
-
-        tests.forEach((test) => {
-            it(test.description, () => {
-                // Arrange
-                const c = new Canvas('example2D')
-                // Act
-                const resultSelectDOM = c.listToSelectDOM(test.list)
-
-                // Assert
-                assert.equal(resultSelectDOM.children.length, test.expectedLength)
-
-                if (test.expectedContent) {
-                    for (var i = 0, len = test.expectedContent.len; i < len; i++) {
-                        assert.equal(resultSelectDOM.children[i].value, test.expectedContent[i].value)
-                        assert.equal(resultSelectDOM.children[i].text, test.expectedContent[i].text)
-                    }
-                }
-            });
-        })
-    });
-
     describe('setScale', () => {
         it('Should save given shape and given scale value.', () => {
             // Arrange
@@ -115,6 +72,34 @@ describe('Canvas', () => {
         
             // Assert
             assert.isFalse(canvas.scale.shape.hasControls)
+        });
+    });
+
+    describe('setImage', () => {
+        it('Should set image of the instance to given instance.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+            const obj = new fabric.Object()
+        
+            // Act
+            canvas.setImage = obj
+        
+            // Assert
+            assert.are.equals(canvas.getImage(), obj)
+        });
+    });
+
+    describe('lockImage', () => {
+        it('Should set image hasControls attribute to false.', () => {
+            // Arrange
+            const canvas = new Canvas('example2D')
+            canvas.setImage(new fabric.Object())
+        
+            // Act
+            canvas.lockImage()
+        
+            // Assert
+            assert.isFalse(canvas.customBackgroundImage.hasControls)
         });
     });
 

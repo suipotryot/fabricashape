@@ -53,7 +53,7 @@
                             </li>
                             <li class="nav-item">-</li>
                             <li class="nav-item">
-                                <input class="form-control" type="file" id="imgLoader" onChange="canvas.addImage(event.target.files[0])">
+                                <input class="form-control" type="file" id="imgLoader" onChange="canvas.setImageFromFile(event.target.files[0])">
                                     <a class="input-group-text btn" onClick="canvas.lockImage()">lock</a>
                             </li>
                             <li class="nav-item">
@@ -261,7 +261,7 @@
         </div>
 
         <!-- Custom Javascript -->
-        <script src="../dist/main.js"></script>
+        <script src="../lib/fabricashape.js"></script>
         <script type="text/javascript" charset="utf-8">
             const canvas = new fabricashape.Canvas('example2D', {class: "my-4 w-100"});
             // Handle resizing of the canvas
@@ -287,8 +287,8 @@
             }
 
             function addArrowLine(options) {
-                const scaleValueObject = document.getElementById("scaleValue"),
-                    scaleValue = scaleValueObject.value
+                const scaleValueObject = document.getElementById("scaleValue")
+                const scaleValue = scaleValueObject.value
 
                 options["text"] = scaleValue
                 const arrowline = new fabricashape.Arrowline(options)
